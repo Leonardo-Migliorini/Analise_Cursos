@@ -16,29 +16,6 @@ DM_CURSO2019 <- arrow::read_parquet("Dados//DM_CURSO2019.parquet") |>
 
 # Filtrando dados --------------------------------------------------------------
 
-# Escolhendo curso(s) pela área CINE
-CINE <- TB_AUX_CINE_BRASIL_2019 |> 
-  dplyr::filter( # Escolhendo área geral
-    NO_CINE_AREA_GERAL == "Engenharia, produção e construção"
-  ) |> 
-  dplyr::select(
-    -c(NO_CINE_AREA_GERAL, CO_CINE_AREA_GERAL)
-  ) |> 
-  dplyr::filter( # Escolhendo área específica
-    NO_CINE_AREA_ESPECIFICA == "Engenharia e profissões correlatas"
-  ) |> 
-  dplyr::select( 
-    -c(NO_CINE_AREA_ESPECIFICA, CO_CINE_AREA_ESPECIFICA)
-  ) |> 
-  dplyr::filter( # Escolhendo área detalhada
-    NO_CINE_AREA_DETALHADA == "Eletricidade e energia"
-  )
-
-table(CINE$NO_CINE_AREA_DETALHADA)
-# CURSOS ESCOLHIDOS: Engenharia Elétrica / CO_CINE_ROTULO = 0713E05
-
-
-
 # Filtrando o banco de dados dos ingressantes
 
 ingressantes <- ingressantes |> 
@@ -48,7 +25,8 @@ ingressantes <- ingressantes |>
       TP_SITUACAO == 6 ~ 1, # 1 indica conclusão (desfecho de interesse)
       TRUE ~ 0 # 0 indica censura por: encerramento do período de acompanhamento,
                # tracamento, desistência ou transferência
-    )
+    ),
+    TP_SITUACAO = as.factor(TP_SITUACAO)
   ) |> 
   dplyr::select( # removendo variáveis desnecessárias
     -NU_ANO_CENSO
@@ -62,10 +40,19 @@ ingressantes <- ingressantes |>
 dados_analise <- dplyr::left_join( # Juntando as tabelas
   ingressantes, DM_CURSO2019, by = dplyr::join_by(CO_IES, CO_CURSO)
   ) |>
-  dplyr::filter( # Filtrando os cursos de engenhaia elétrica
-    CO_CINE_ROTULO == "0713E05"
-  )
+  dplyr::filter(
+    TP_CATEGORIA_ADMINISTRATIVA == 7,
+    # TP_CATEGORIA_ADMINISTRATIVA == c(1,2,3),
+    # CO_UF == 43
+  ) |>
+  dplyr::filter( # Filtrando os cursos relações internacionais
+    CO_CINE_ROTULO == "0312R01",
+  ) 
 
-summary(dados_analise$TMP_DESFECHO)
+# Calculo da proporção de censuras:
+summary(dados_analise$TP_SITUACAO)[1]/nrow(dados_analise)
 
 table(dados_analise$NO_CURSO)
+colnames(dados_analise)
+
+arrow::write_parquet(dados_analise, "dados_modelagem.parquet")
