@@ -20,13 +20,12 @@ DM_CURSO2019 <- arrow::read_parquet("Dados//DM_CURSO2019.parquet") |>
 
 ingressantes <- ingressantes |> 
   dplyr::mutate(
-    TMP_DESFECHO = 2019 - NU_ANO_CENSO, # Calculando tempo de desfecho
+    TMP_DESFECHO = 2019 - NU_ANO_CENSO + 1, # Calculando tempo de desfecho
     TP_SITUACAO = dplyr::case_when(
       TP_SITUACAO == 6 ~ 1, # 1 indica conclusão (desfecho de interesse)
       TRUE ~ 0 # 0 indica censura por: encerramento do período de acompanhamento,
                # tracamento, desistência ou transferência
-    ),
-    TP_SITUACAO = as.factor(TP_SITUACAO)
+    )
   ) |> 
   dplyr::select( # removendo variáveis desnecessárias
     -NU_ANO_CENSO
@@ -45,12 +44,13 @@ dados_analise <- dplyr::left_join( # Juntando as tabelas
     # TP_CATEGORIA_ADMINISTRATIVA == c(1,2,3),
     # CO_UF == 43
   ) |>
-  dplyr::filter( # Filtrando os cursos relações internacionais
-    CO_CINE_ROTULO == "0312R01",
+  dplyr::filter( # Filtrando os cursos de Psicologia
+    CO_CINE_ROTULO == "0313P01",
   ) 
 
 # Calculo da proporção de censuras:
-summary(dados_analise$TP_SITUACAO)[1]/nrow(dados_analise)
+summary(as.factor(dados_analise$TP_SITUACAO))[1]/nrow(dados_analise)
+summary(dados_analise$TMP_DESFECHO)
 
 table(dados_analise$NO_CURSO)
 colnames(dados_analise)
