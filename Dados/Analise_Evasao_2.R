@@ -248,9 +248,9 @@ get_freq_formatada <- function(dados, variavel, nome_var) {
 }
 
 df_perfil <- dados_modelagem |>
-  # dplyr::filter(  # Para remover as censuras
-  #   evento == 1
-  # ) |>
+  dplyr::filter(  # Para remover as censuras
+    evento == 1
+  ) |>
   dplyr::mutate(
     Nome_IES = dplyr::case_when(
       CO_IES_55 == 1 ~ "USP",
@@ -262,7 +262,8 @@ df_perfil <- dados_modelagem |>
       PRETA == 1 ~ "Preta",
       PARDA == 1 ~ "Parda",
       INDIGENA == 1 ~ "Indígena",
-      TRUE ~ "Branca/Outras"
+      BRANCA == 1 ~ "Branca",
+      TRUE ~ "Outras"
     )
   )
 
