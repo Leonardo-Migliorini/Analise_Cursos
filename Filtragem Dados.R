@@ -39,17 +39,13 @@ ingressantes <- ingressantes |>
 dados_analise <- dplyr::left_join( # Juntando as tabelas
   ingressantes, DM_CURSO2019, by = dplyr::join_by(CO_IES, CO_CURSO)
   ) |>
-  dplyr::filter(
-    TP_CATEGORIA_ADMINISTRATIVA == 7,
-    # TP_CATEGORIA_ADMINISTRATIVA == c(1,2,3),
-    # CO_UF == 43
-  ) |>
-  dplyr::filter( # Filtrando os cursos de Psicologia
-    CO_CINE_ROTULO == "0313P01",
+  dplyr::filter( # Filtrando os cursos de Engenharia aeroespacia
+    CO_CINE_ROTULO == "0716E01",
   ) 
 
 # Calculo da proporção de censuras:
 summary(as.factor(dados_analise$TP_SITUACAO))[1]/nrow(dados_analise)
+nrow(dados_analise)
 summary(dados_analise$TMP_DESFECHO)
 
 table(dados_analise$NO_CURSO)
