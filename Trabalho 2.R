@@ -17,10 +17,10 @@ library(knitr)
 # Carregando bancos de dados ---------------------------------------------------
 
 # Base de alunos
-ALUNO_ING2010_surv <- readr::read_csv("ALUNO_ING2010-surv.csv")
+ALUNO_ING2010_surv <- readr::read_csv("Dados//ALUNO_ING2010-surv.csv")
 
 # Base de cursos 2019
-DM_CURSO2019 <- read.table("DM_CURSO2019.csv", header = TRUE, sep = "|")
+DM_CURSO2019 <- read.table("Dados//DM_CURSO2019.csv", header = TRUE, sep = "|")
 
 # Filtrando bancos de dados ----------------------------------------------------
 

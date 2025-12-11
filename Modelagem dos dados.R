@@ -1,11 +1,22 @@
+# Ajustando separador decimal para ","
+options(OutDec = ",")
+
 # Carregando dados -------------------------------------------------------------
 
-dados_modelagem <- arrow::read_parquet("Dados//dados_modelagem.parquet")
+dados_modelagem <- arrow::read_parquet("dados_modelagem.parquet")
 
 # Carregando pacotes -----------------------------------------------------------
 
+library(ggplot2)
+library(ggfortify)
 library(survival)
+library(survminer)
 library(flexsurv)
+library(kableExtra)
+library(patchwork)
+library(broom)
+library(knitr)
+library(dplyr)
 
 # Análise dos dados ------------------------------------------------------------
 
